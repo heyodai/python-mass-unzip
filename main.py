@@ -9,16 +9,16 @@ if not os.path.exists('logs'):
     os.makedirs('logs')
 
 logger = logging.getLogger()
-logger.setLevel(logger.info)
+logger.setLevel(logging.INFO)
 
 handler = logging.StreamHandler()
-handler.setLevel(logger.info)
+handler.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 handler = logging.FileHandler(filename=f'logs/{epoch_time}.log', mode='w')
-handler.setLevel(logger.info)
+handler.setLevel(logging.INFO)
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
