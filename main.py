@@ -7,15 +7,20 @@ import time
 epoch_time = int(time.time())
 if not os.path.exists('logs'):
     os.makedirs('logs')
-    
+
 logging.basicConfig(filename=f'logs/{epoch_time}.log', level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
 def unzip_file(full_path, directory):
+    filename = os.path.basename(full_path)
+    name, extension = os.path.splitext(filename)
+    target_directory = os.path.join(directory, name)
+    
     try:
+        os.makedirs(target_directory, exist_ok=True)
         with zipfile.ZipFile(full_path, 'r') as zip_ref:
-            logging.info(f'Unzipping file {full_path}')
-            zip_ref.extractall(directory)
+            logging.info(f'Unzipping file {full_path} into directory {target_directory}')
+            zip_ref.extractall(target_directory)
         logging.info(f'Successfully unzipped file {full_path}')
     except Exception as e:
         logging.error(f'Failed to unzip file {full_path}, error: {str(e)}')
