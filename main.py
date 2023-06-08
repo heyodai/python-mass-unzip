@@ -8,8 +8,19 @@ epoch_time = int(time.time())
 if not os.path.exists('logs'):
     os.makedirs('logs')
 
-logging.basicConfig(filename=f'logs/{epoch_time}.log', level=logging.INFO,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger()
+logger.setLevel(logger.info)
+
+handler = logging.StreamHandler()
+handler.setLevel(logger.info)
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
+handler = logging.FileHandler(filename=f'logs/{epoch_time}.log', mode='w')
+handler.setLevel(logger.info)
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 def unzip_file(full_path, directory):
     filename = os.path.basename(full_path)
@@ -19,20 +30,22 @@ def unzip_file(full_path, directory):
     try:
         os.makedirs(target_directory, exist_ok=True)
         with zipfile.ZipFile(full_path, 'r') as zip_ref:
-            logging.info(f'Unzipping file {full_path} into directory {target_directory}')
+            logger.info(f'Unzipping file {full_path} into directory {target_directory}')
             zip_ref.extractall(target_directory)
-        logging.info(f'Successfully unzipped file {full_path}')
+        logger.info(f'Successfully unzipped file {full_path}')
     except Exception as e:
-        logging.error(f'Failed to unzip file {full_path}, error: {str(e)}')
+        logger.error(f'Failed to unzip file {full_path}, error: {str(e)}')
 
 def delete_file(full_path):
     try:
         os.remove(full_path)
-        logging.info(f'Successfully deleted zip file {full_path}')
+        logger.info(f'Successfully deleted zip file {full_path}')
     except Exception as e:
-        logging.error(f'Failed to delete file {full_path}, error: {str(e)}')
+        logger.error(f'Failed to delete file {full_path}, error: {str(e)}')
 
 def main():
+    start_time = time.time()
+
     parser = argparse.ArgumentParser(description='Unzip and delete zip files in a directory.')
     parser.add_argument('dir', type=str, help='The directory to process')
     
@@ -44,6 +57,9 @@ def main():
             full_path = os.path.join(directory, filename)
             unzip_file(full_path, directory)
             delete_file(full_path)
+
+    elapsed_time = time.time() - start_time
+    logger.info(f'Elapsed time: {elapsed_time} seconds')
 
 if __name__ == "__main__":
     main()
