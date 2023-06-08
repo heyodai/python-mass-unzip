@@ -5,6 +5,9 @@ import zipfile
 import time
 
 epoch_time = int(time.time())
+if not os.path.exists('logs'):
+    os.makedirs('logs')
+    
 logging.basicConfig(filename=f'logs/{epoch_time}.log', level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
