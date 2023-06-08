@@ -62,6 +62,7 @@ def main():
         logger.info(f'Processed {i} out of {total_files}')
 
     elapsed_time = time.time() - start_time
+    elapsed_time = round(elapsed_time, 2)
     logger.info(f'Elapsed time: {elapsed_time} seconds')
 
 if __name__ == "__main__":
