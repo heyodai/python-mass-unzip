@@ -52,11 +52,14 @@ def main():
     args = parser.parse_args()
     directory = args.dir
 
-    for filename in os.listdir(directory):
-        if filename.endswith(".zip"):
-            full_path = os.path.join(directory, filename)
-            unzip_file(full_path, directory)
-            delete_file(full_path)
+    zip_files = [f for f in os.listdir(directory) if f.endswith(".zip")]
+    total_files = len(zip_files)
+
+    for i, filename in enumerate(zip_files, start=1):
+        full_path = os.path.join(directory, filename)
+        unzip_file(full_path, directory)
+        delete_file(full_path)
+        logger.info(f'Processed {i} out of {total_files}')
 
     elapsed_time = time.time() - start_time
     logger.info(f'Elapsed time: {elapsed_time} seconds')
